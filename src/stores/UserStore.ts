@@ -4,21 +4,16 @@ import type { User } from '@/types/UserType'
 import { GenderFilter } from '@/enum/GenderEnum'
 
 export const useUserStore = defineStore('userStore', () => {
-  const users = ref<User[]>(
-    JSON.parse(localStorage.getItem('users') || '[]')
-  )
+  const users = ref<User[]>(JSON.parse(localStorage.getItem('users') || '[]'))
   const genderFilter = ref<GenderFilter>(
-    (localStorage.getItem('genderFilter') as GenderFilter) || GenderFilter.All
+    (localStorage.getItem('genderFilter') as GenderFilter) || GenderFilter.All,
   )
   const currentPage = ref<number>(1)
   const usersPerPage = ref<number>(10)
 
   const filteredUsers = computed(() => {
-    if (genderFilter.value === GenderFilter.All) 
-    return users.value
-    return users.value.filter(
-      user => user.gender === genderFilter.value.toLowerCase()
-    )
+    if (genderFilter.value === GenderFilter.All) return users.value
+    return users.value.filter((user) => user.gender === genderFilter.value.toLowerCase())
   })
 
   const paginatedUsers = computed(() => {
@@ -45,14 +40,6 @@ export const useUserStore = defineStore('userStore', () => {
     currentPage.value = page
   }
 
-  function reset() {
-    users.value = []
-    genderFilter.value = GenderFilter.All
-    currentPage.value = 1
-    localStorage.removeItem('users')
-    localStorage.removeItem('genderFilter')
-  }
-
   return {
     users,
     genderFilter,
@@ -64,6 +51,5 @@ export const useUserStore = defineStore('userStore', () => {
     setUsers,
     setGenderFilter,
     setCurrentPage,
-    reset
   }
 })
