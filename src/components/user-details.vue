@@ -8,15 +8,14 @@ const emit = defineEmits(['close'])
   <div class="list">
     <div class="details">
       <img :src="user.picture.large" alt="User Picture" />
-      <p><strong>Name:</strong> {{ user.name.title }}. {{ user.name.first }} 
-        {{ user.name.last }}</p>
-      <p><strong>Gender:</strong> {{ user.gender.toLocaleUpperCase()}}</p>
-      <p><strong>Email:</strong> {{ user.email }}</p>
-      <p><strong>Phone:</strong> {{ user.phone }}</p>
-      <p><strong>Address:</strong> {{ user.location.street.number }}, 
-        {{ user.location.street.name }},
-        {{ user.location.city }}, 
-        {{ user.location.country }}</p>
+      <h3>{{ user.name.first }} {{ user.name.last }}</h3>
+      <p>Gender: {{ user.gender.toLocaleUpperCase() }}</p>
+      <p>Email: {{ user.email }}</p>
+      <p>Phone: {{ user.phone }}</p>
+      <p>
+        Address: {{ user.location.street.number }}, {{ user.location.street.name }},
+        {{ user.location.city }}, {{ user.location.country }}
+      </p>
       <button @click="emit('close')">Close</button>
     </div>
   </div>
@@ -38,7 +37,11 @@ const emit = defineEmits(['close'])
   background: white;
   padding: 2rem;
   border-radius: 10px;
-  text-align: center;
-  width: 400px;
+  text-align: left;
+  width: 350px;
+}
+.details img {
+  display: flex;
+  align-items: center;
 }
 </style>

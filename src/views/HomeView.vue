@@ -15,7 +15,8 @@ const gender = ref<GenderFilter>(store.genderFilter)
 const selectedUser = ref<User | null>(null)
 
 onMounted(async () => {
-  await fetchRandomUsers(50, gender.value)
+  const count = gender.value === GenderFilter.All ? 50 : 25
+  await fetchRandomUsers(count, gender.value)
   store.setUsers(users.value)
 })
 
@@ -34,11 +35,13 @@ function onFilterChange() {
 </script>
 
 <template>
-  <div class="heading-center">
+  <div class="page-center">
     <h1 class="title">Random Users</h1>
 
     <select v-model="gender" @change="onFilterChange">
-      <option v-for="g in genders" :key="g" :value="g">{{ g }}</option>
+      <option v-for="usersGender in genders" :key="usersGender" :value="usersGender">
+        {{ usersGender }}
+      </option>
     </select>
 
     <button @click="refreshList" :disabled="isLoading">Refresh</button>
@@ -46,37 +49,39 @@ function onFilterChange() {
     <div v-if="isLoading">Loading...</div>
     <div v-if="error">Error: {{ error }}</div>
 
-  </div>
-  <div class="user-list">
-    <user-card v-for="user in store.paginatedUsers" :key="user.login.uuid"
-      :user="user" @click="selectedUser = user"/>
+    <div class="user-list">
+      <user-card
+        v-for="user in store.paginatedUsers"
+        :key="user.login.uuid"
+        :user="user"
+        @click="selectedUser = user"
+      />
+    </div>
 
-    <pagination :total-pages="store.totalPages" :current-page="store.currentPage"
-      @change="store.setCurrentPage"/>
+    <pagination
+      :total-pages="store.totalPages"
+      :current-page="store.currentPage"
+      @change="store.setCurrentPage"
+    />
 
-    <user-details v-if="selectedUser" :user="selectedUser"
-      @close="selectedUser = null" />
+    <user-details v-if="selectedUser" :user="selectedUser" @close="selectedUser = null" />
   </div>
 </template>
 
-
 <style scoped>
-.heading-center {
+.page-center {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 2rem;
+  padding: 1rem;
+  min-height: 100vh;
 }
 .title {
   margin-bottom: 1rem;
   font-size: 2rem;
   font-weight: bold;
   color: black;
-}
-.user-list {
-  display: flex;
-  
 }
 select {
   padding: 0.2rem;
@@ -91,5 +96,13 @@ button {
 button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+.user-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-top: 0.5rem;
+  width: 100%;
+  max-width: 1000px;
 }
 </style>
